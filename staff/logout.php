@@ -1,0 +1,9 @@
+<?php
+  session_start();
+  if(isset($_SESSION['stapass'])){
+      unset($_SESSION['stapass']);
+  }
+  session_destroy();
+  header("Location:../login.php");
+  exit;
+?>

@@ -1,0 +1,9 @@
+<?php
+  session_start();
+  if(isset($_SESSION['stupass'])){
+      unset($_SESSION['stupass']);
+  }
+  session_destroy();
+  header("Location:../login.php");
+  exit;
+?>
