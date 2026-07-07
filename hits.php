@@ -9,7 +9,11 @@
     $q0->bind_param('ss',$h, $id);
     $q0->execute();
     $q0->close();
-    header("Location:uploads/$file");
+    if (isset($_GET['type']) && $_GET['type'] == 'chapter') {
+      header("Location:uploads/chapters/$file");
+    } else {
+      header("Location:uploads/$file");
+    }
     exit;
   }
   else {

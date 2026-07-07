@@ -16,7 +16,7 @@
       $q->free_result();
       $q->close();
       $db->close();
-      if($dbpass == $password){
+      if($dbpass == md5($password)){
         if ($staff == "0") {
           $_SESSION['stupass'] = $_POST['username'];
           header("Location:student/");

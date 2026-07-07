@@ -35,6 +35,7 @@
             $q = $db->prepare("select id from chapters where chapter = ? && username = ?");
             $q->bind_param('ss',$chapter,$studentid);
             $q->execute();
+            $q->store_result();
 
             if ($q->num_rows > 0) {
               $q->close();

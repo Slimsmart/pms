@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    background: #f4f7f6;
+    background-image: radial-gradient(circle at top right, #e0eafc, #cfdef3);
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Navbar Modernization */
+.navbar-inner {
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: none !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+.navbar .brand {
+    font-weight: 700;
+    color: #fff !important;
+    text-shadow: none;
+    letter-spacing: -0.5px;
+}
+.navbar .nav > li > a {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-shadow: none !important;
+}
+.navbar .nav > li > a:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 6px;
+}
+
+/* Panel / Card Modernization */
+.panel {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+.panel-heading {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+    padding: 20px 25px !important;
+}
+.panel-heading h3, .panel-heading h4 {
+    margin: 0;
+    font-weight: 700;
+    color: #1e293b;
+}
+.panel-body {
+    padding: 25px !important;
+}
+.panel-footer {
+    background: rgba(248, 250, 252, 0.5) !important;
+    border-top: 1px solid rgba(0,0,0,0.05) !important;
+    padding: 15px 25px !important;
+}
+
+/* Button Modernization */
+.btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+    color: white !important;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Table Modernization */
+.table {
+    background: transparent;
+}
+.table thead th {
+    border-bottom: 2px solid rgba(0,0,0,0.05) !important;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+.table tbody tr {
+    transition: all 0.2s;
+}
+.table tbody tr:hover {
+    background-color: rgba(241, 245, 249, 0.5) !important;
+    transform: scale(1.01);
+}
+.table td {
+    vertical-align: middle !important;
+    border-color: rgba(0,0,0,0.05) !important;
+}
+
+/* Forms */
+.form-control, input[type="text"], input[type="password"] {
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    padding: 10px 15px !important;
+    height: auto !important;
+    transition: all 0.3s !important;
+}
+.form-control:focus, input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Custom links */
+a {
+    transition: all 0.2s;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Plagiarism Checker Specific */
+.score-badge {
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.score-safe { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+.score-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; }
+.score-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; }
+.score-none { background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important; }

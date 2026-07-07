@@ -56,243 +56,275 @@ $q0->close();
   <meta name="description" content="">
   <meta name="author" content="">
   <!-- css -->
-  <link href="../css/bootstrap-responsive.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/bootstrap.css">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/font-awesome.css">
   <!-- skin color -->
   <link href="../color/default.css" rel="stylesheet">
   <!-- Favicon -->
   <link rel="shortcut icon" href="../img/favicon.ico">
-  </head>
+  
+<link rel="stylesheet" href="/pms/css/student-dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>.spacer { padding-top: 100px; padding-bottom: 60px; }</style>
+</head>
   <body>
   <!-- navbar -->
   <div class="navbar-wrapper">
-  	<div class="navbar navbar-inverse navbar-fixed-top">
-  		<div class="navbar-inner">
-  			<div class="container">
-  				<div class="navbar-header">
-  		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-  		        <span class="icon-bar"></span>
-  		        <span class="icon-bar"></span>
-  		        <span class="icon-bar"></span>
+  	<div class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" style="background: rgba(15, 23, 42, 0.85) !important; backdrop-filter: blur(12px);">
+  		<div class="container">
+  			<div class="navbar-header d-flex align-items-center w-100 justify-content-between">
+  				<h3 class="navbar-brand fw-bold mb-0" style="margin:0;"><a href="/" style="color: white; text-decoration: none;">STUDENT</a></h3>
+  		      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbar">
+  		        <span class="navbar-toggler-icon"></span>
   		      </button>
-  					<h3 class="brand navbar-brand" style=""><a href="/">STUDENT</a></h3>
   		    </div>
-  				<!-- Responsive navbar -->
-
-  				<!-- navigation -->
-  				<div class="collapse navbar-collapse" id="myNavbar">
-  		      <ul id="menu-main" class="nav navbar-nav navbar-right">
-  		        <li><a href="logout.php"><span class="fa fa-lock"></span> Logout</a></li>
+  			<div class="collapse navbar-collapse" id="myNavbar">
+  		      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+  		        <li class="nav-item"><a class="nav-link text-white me-3" href="preferences.php"><i class="fa-solid fa-list-ol"></i> Preferences</a></li><li class="nav-item"><a class="nav-link text-white" href="logout.php"><i class="fa-solid fa-lock"></i> Logout</a></li>
   		      </ul>
   		    </div>
-  			</div>
   		</div>
   	</div>
   </div>
 
-  <section class="spacer blue mtb30"  style="color:black; margin-top:80px;">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="span10 offset1" style="">
-        <div class="row-fluid">
-            <?php if ($n < 1): ?>
-              <p>You haven't been assigned a supervisor yet.</p>
-            <?php else:
-              $q = $db->prepare("select name, phone from users where username = ?");
-              $q->bind_param('s',$staffid);
-              $q->execute();
-              $q->bind_result($supervisor_name, $supervisor_number);
-              $q->fetch();
-              $q->close();
+  <section class="spacer">
+  <div class="container">
+    <?php if ($n < 1): ?>
+      <div class="glass-card text-center py-5">
+        <i class="fa-solid fa-user-clock fa-4x mb-3" style="color: var(--warning);"></i>
+        <h3>Awaiting Supervisor Assignment</h3>
+        <p class="text-muted">You haven't been assigned a supervisor yet. Please check back later.</p>
+      </div>
+    <?php else:
+      $q = $db->prepare("select name, phone from users where username = ?");
+      $q->bind_param('s',$staffid);
+      $q->execute();
+      $q->bind_result($supervisor_name, $supervisor_number);
+      $q->fetch();
+      $q->close();
 
-              $q = $db->prepare("select id, topic, abstract, approved, comments from projects where username = ?");
-              $q->bind_param('s',$studentid);
-              $q->execute();
-              $q->store_result();
-              $np = $q->num_rows;
-            ?>
-            <div class="span4">
-              <p>Welcome <?php echo $student_name; ?> </p>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <b>Supervisor Details</b>
-                </div>
-                <div class="panel-body">
-                  <p> <b>Name:</b> <?php echo "$supervisor_name"; ?> </p>
-                  <p> <b>Phone:</b> <?php echo "$supervisor_number"; ?> </p>
-                </div>
-              </div>
-            </div>
-            <div class="span8">
-              <?php if ($np > 0):
-                $x = 0; $q->bind_result($projectId, $topic, $abstract, $approved, $comment); ?>
-                <table class="table table-bordered table-responsive">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Topic/Chapter</th>
-                      <th>Status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php while ($q->fetch()): $x++;?>
-                      <tr>
-                        <td> <?php echo $x; ?> </td>
-                        <td> <?php echo $topic; ?> </td>
-                        <td>
-                          <?php if ($approved == "0"){
-                                  echo "Pending";
-                                }
-                                elseif ($approved == "1") {
-                                  echo "Accepted";
-                                }
-                                else {
-                                  echo "Declined";
-                                }
-                          ?>
-                        </td>
-                        <td> <a href="../uploads/<?php echo $abstract; ?>" target="_blank">View</a> </td>
-                      </tr>
-                      <tr>
-                        <td colspan="4"> <?php echo $comment; ?></td>
-                      </tr>
-                    <?php endwhile; ?>
-                    <?php if ($approved == '1'):
-                      $q0 = $db->prepare("select approved, link, comment from chapters where username = ? && chapter = ?");
-                    ?>
-                      <?php for ($i=1; $i < 7; $i++):
-                        $q0->bind_param('ss',$studentid,$i);
-                        $q0->execute();
-                        $q0->store_result();
-                        $q0->bind_result($approved_chapter, $chapter_link, $comments);
-                        $q0->fetch();
-                      ?>
-                        <tr>
-                          <td> <?php echo ++$x; ?> </td>
-                          <td> <b>Chapter <?php echo $i; ?> </b>  </td>
-                          <td>
-                            <?php
-                              if ($approved_chapter == null) {
-                                echo "Not submitted";
-                              }
-                              elseif ($approved_chapter == "-1"){
-                                echo "Declined";
-                              }
-                              elseif ($approved_chapter == "1") {
-                                echo "Accepted";
-                              }
-                              else {
-                                echo "Pending";
-                              }
-                            ?>
-                          </td>
-                          <td>
-                            <?php if ($approved_chapter == null): ?>
-                              -
-                            <?php else: ?>
-                              <a href="../uploads/chapters/<?php echo $chapter_link; ?>" target="_blank">View</a>
-                            <?php endif; ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="4"> <?php echo $comments; ?> </td>
-                        </tr>
-                      <?php if ($approved_chapter != 1) break; ?>
+      $q = $db->prepare("select id, topic, abstract, approved, comments from projects where username = ?");
+      $q->bind_param('s',$studentid);
+      $q->execute();
+      $q->store_result();
+      $np = $q->num_rows;
+    ?>
+    
+    <div class="dashboard-hero text-center text-md-start">
+      <h2>Welcome back, <?php echo htmlspecialchars($student_name); ?>! 👋</h2>
+      <p>Track your project progress and submit chapters for review.</p>
+    </div>
 
-                    <?php endfor; $q0->close(); ?>
-                  <?php endif; ?>
-                  </tbody>
-                </table>
-              <?php else: ?>
-                <h4 class="aligncenter">No previous submition has been made.</h4>
-              <?php endif; ?>
-              <div class="panel">
-                <?php if ($approved == 1): ?>
-                  <form class="" action="submit-chapter.php" method="post" enctype="multipart/form-data">
-                    <div class="panel-heading aligncenter">
-                      <h4> <b>Submit project (chapter) for assessment</b> </h4>
-                    </div>
-                    <?php if (isset($_SESSION['errmsg'])): ?>
-                      <span style="color:red; text-align: center;" class="aligncenter" >
-                        <?php echo htmlentities($_SESSION['errmsg']); ?>
-                      </span>
-                    <?php endif; unset($_SESSION['errmsg'])?>
-
-                    <?php if (isset($_SESSION['msg'])): ?>
-                      <span style="color:lightgreen; text-align: center;" class="aligncenter">
-                        <?php echo htmlentities($_SESSION['msg']); ?>
-                      </span>
-                    <?php endif; unset($_SESSION['msg'])?>
-                    <div class="panel-body">
-                      <div class="form-group">
-                        <label for="topic">Select Chapter</label>
-                        <select class="form-control" name="chapter" required>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                          <option value="6">Full Project</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="abstract">Upload</label>
-                        <input type="file" name="file" required class="form-control">
-                      </div>
-                      <input type="hidden" name="projectid" value="<?php echo $projectId; ?>">
-                    </div>
-                    <div class="panel-footer">
-                      <input type="submit" name="pcb" value="Submit" class="btn btn-primary">
-                    </div>
-                  </form>
-                <?php else: ?>
-                  <form class="" action="submit-topic.php" method="post" enctype="multipart/form-data">
-                    <div class="panel-heading aligncenter">
-                      <h4> <b>Submit project topic proposal</b> </h4>
-                    </div>
-                    <?php if (isset($_SESSION['errmsg'])): ?>
-                      <span style="color:red; text-align: center;" class="aligncenter" >
-                        <?php echo htmlentities($_SESSION['errmsg']); ?>
-                      </span>
-                    <?php endif; unset($_SESSION['errmsg'])?>
-
-                    <?php if (isset($_SESSION['msg'])): ?>
-                      <span style="color:lightgreen; text-align: center;" class="aligncenter">
-                        <?php echo htmlentities($_SESSION['msg']); ?>
-                      </span>
-                    <?php endif; unset($_SESSION['msg'])?>
-                    <div class="panel-body">
-                      <div class="form-group">
-                        <label for="topic">Project topic</label>
-                        <textarea required name="topic" id="topic" class="form-control" rows="2" placeholder="Enter project topic here.."></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="abstract">Upload Abstract</label>
-                        <input type="file" name="abstract" required class="form-control">
-                      </div>
-                    </div>
-                    <div class="panel-footer">
-                      <input type="submit" name="pp" value="Submit" class="btn btn-primary">
-                    </div>
-                  </form>
-                <?php endif; ?>
-
-              </div>
-            </div>
-            <?php endif; ?>
+    <div class="row gx-lg-5">
+      <!-- Left Column: Supervisor Details & Submit Form -->
+      <div class="col-lg-4 mb-4 mb-lg-0">
+        <div class="glass-card">
+          <div class="glass-card-header">
+            <i class="fa-solid fa-user-tie"></i>
+            <h4>Supervisor Details</h4>
           </div>
+          <div class="supervisor-details">
+            <p><i class="fa-solid fa-user"></i> <b>Name:</b> <?php echo htmlspecialchars($supervisor_name); ?></p>
+            <p><i class="fa-solid fa-phone"></i> <b>Phone:</b> <?php echo htmlspecialchars($supervisor_number); ?></p>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <?php if ($project_approved == 1): ?>
+            <form action="submit-chapter.php" method="post" enctype="multipart/form-data">
+              <div class="glass-card-header">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <h4>Submit Chapter</h4>
+              </div>
+              <?php if (isset($_SESSION['errmsg'])): ?>
+                <div class="alert alert-danger py-2 px-3 rounded-3" style="font-size: 0.9rem;">
+                  <i class="fa-solid fa-circle-exclamation"></i> <?php echo htmlentities($_SESSION['errmsg']); ?>
+                </div>
+              <?php endif; unset($_SESSION['errmsg'])?>
+
+              <?php if (isset($_SESSION['msg'])): ?>
+                <div class="alert alert-success py-2 px-3 rounded-3" style="font-size: 0.9rem;">
+                  <i class="fa-solid fa-circle-check"></i> <?php echo htmlentities($_SESSION['msg']); ?>
+                </div>
+              <?php endif; unset($_SESSION['msg'])?>
+              
+              <div class="modern-form-group">
+                <label for="chapter">Select Chapter</label>
+                <select class="modern-input" name="chapter" required>
+                  <option value="1">Chapter 1</option>
+                  <option value="2">Chapter 2</option>
+                  <option value="3">Chapter 3</option>
+                  <option value="4">Chapter 4</option>
+                  <option value="5">Chapter 5</option>
+                  <option value="6">Full Project</option>
+                </select>
+              </div>
+              <div class="modern-form-group">
+                <label for="abstract">Upload Document</label>
+                <input type="file" name="file" required class="modern-input" style="padding: 0.5rem 1rem;">
+              </div>
+              <input type="hidden" name="projectid" value="<?php echo $projectId; ?>">
+              <button type="submit" name="pcb" class="modern-btn mt-3">
+                <i class="fa-solid fa-paper-plane"></i> Submit Chapter
+              </button>
+            </form>
+          <?php else: ?>
+            <form action="submit-topic.php" method="post" enctype="multipart/form-data">
+              <div class="glass-card-header">
+                <i class="fa-solid fa-lightbulb"></i>
+                <h4>Submit Proposal</h4>
+              </div>
+              <?php if (isset($_SESSION['errmsg'])): ?>
+                <div class="alert alert-danger py-2 px-3 rounded-3" style="font-size: 0.9rem;">
+                  <i class="fa-solid fa-circle-exclamation"></i> <?php echo htmlentities($_SESSION['errmsg']); ?>
+                </div>
+              <?php endif; unset($_SESSION['errmsg'])?>
+
+              <?php if (isset($_SESSION['msg'])): ?>
+                <div class="alert alert-success py-2 px-3 rounded-3" style="font-size: 0.9rem;">
+                  <i class="fa-solid fa-circle-check"></i> <?php echo htmlentities($_SESSION['msg']); ?>
+                </div>
+              <?php endif; unset($_SESSION['msg'])?>
+              
+              <div class="modern-form-group">
+                <label for="topic">Project Topic</label>
+                <textarea required name="topic" id="topic" class="modern-input" rows="3" placeholder="Enter project topic here.."></textarea>
+              </div>
+              <div class="modern-form-group">
+                <label for="abstract">Upload Abstract</label>
+                <input type="file" name="abstract" required class="modern-input" style="padding: 0.5rem 1rem;">
+              </div>
+              <button type="submit" name="pp" class="modern-btn mt-3">
+                <i class="fa-solid fa-paper-plane"></i> Submit Proposal
+              </button>
+            </form>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- Right Column: Project Progress Table -->
+      <div class="col-lg-8">
+        <div class="glass-card" style="padding: 2rem;">
+          <div class="glass-card-header mb-4">
+            <i class="fa-solid fa-bars-progress"></i>
+            <h4>Project Progress</h4>
+          </div>
+          
+          <?php if ($np > 0):
+            $x = 0; $q->bind_result($projectId, $topic, $abstract, $approved, $comment); ?>
+            
+            <div class="modern-grid">
+              <div class="modern-grid-header d-none d-md-grid">
+                <div>#</div>
+                <div>Topic/Chapter</div>
+                <div>Status</div>
+                <div class="text-md-end">Action</div>
+              </div>
+              
+              <?php while ($q->fetch()): $x++;?>
+                <div class="modern-grid-row">
+                  <div class="grid-col-id d-none d-md-block"><?php echo $x; ?></div>
+                  <div class="grid-col-topic">
+                    <span class="d-md-none text-muted mb-1" style="font-size: 0.8rem; font-weight: 700;">PROPOSAL</span>
+                    <?php echo htmlspecialchars($topic); ?>
+                    <?php if (!empty($comment)): ?>
+                      <small><i class="fa-solid fa-comment-dots"></i> <?php echo htmlspecialchars($comment); ?></small>
+                    <?php endif; ?>
+                  </div>
+                  <div>
+                    <?php 
+                      if ($approved == "0"){
+                        echo '<span class="status-badge pending"><i class="fa-regular fa-clock"></i> Pending</span>';
+                      }
+                      elseif ($approved == "1") {
+                        echo '<span class="status-badge accepted"><i class="fa-solid fa-check"></i> Accepted</span>';
+                      }
+                      else {
+                        echo '<span class="status-badge declined"><i class="fa-solid fa-xmark"></i> Declined</span>';
+                      }
+                    ?>
+                  </div>
+                  <div class="text-md-end mt-3 mt-md-0">
+                    <a href="../uploads/<?php echo urlencode($abstract); ?>" target="_blank" class="action-link">
+                      <i class="fa-regular fa-eye"></i> View
+                    </a>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+              
+              <?php if ($approved == '1'):
+                $q0 = $db->prepare("select approved, link, comment from chapters where username = ? && chapter = ?");
+              ?>
+                <?php for ($i=1; $i < 7; $i++):
+                  $q0->bind_param('ss',$studentid,$i);
+                  $q0->execute();
+                  $q0->store_result();
+                  $q0->bind_result($approved_chapter, $chapter_link, $comments);
+                  $q0->fetch();
+                  
+                  $statusClass = 'notsubmitted';
+                  $statusText = 'Not Submitted';
+                  $statusIcon = 'fa-solid fa-minus';
+                  
+                  if ($approved_chapter !== null) {
+                    if ($approved_chapter == "-1"){
+                      $statusClass = 'declined'; $statusText = 'Declined'; $statusIcon = 'fa-solid fa-xmark';
+                    } elseif ($approved_chapter == "1") {
+                      $statusClass = 'accepted'; $statusText = 'Accepted'; $statusIcon = 'fa-solid fa-check';
+                    } else {
+                      $statusClass = 'pending'; $statusText = 'Pending'; $statusIcon = 'fa-regular fa-clock';
+                    }
+                  }
+                ?>
+                  <div class="modern-grid-row">
+                    <div class="grid-col-id d-none d-md-block"><?php echo ++$x; ?></div>
+                    <div class="grid-col-topic">
+                      <span class="d-md-none text-muted mb-1" style="font-size: 0.8rem; font-weight: 700;">CHAPTER <?php echo $i; ?></span>
+                      <?php echo ($i==6) ? 'Full Project' : 'Chapter '.$i; ?>
+                      <?php if (!empty($comments)): ?>
+                        <small><i class="fa-solid fa-comment-dots"></i> <?php echo htmlspecialchars($comments); ?></small>
+                      <?php endif; ?>
+                    </div>
+                    <div>
+                      <span class="status-badge <?php echo $statusClass; ?>">
+                        <i class="<?php echo $statusIcon; ?>"></i> <?php echo $statusText; ?>
+                      </span>
+                    </div>
+                    <div class="text-md-end mt-3 mt-md-0">
+                      <?php if ($approved_chapter == null): ?>
+                        <span class="text-muted">-</span>
+                      <?php else: ?>
+                        <a href="../uploads/chapters/<?php echo urlencode($chapter_link); ?>" target="_blank" class="action-link">
+                          <i class="fa-regular fa-file-pdf"></i> View
+                        </a>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <?php if ($approved_chapter != 1) break; ?>
+                <?php endfor; $q0->close(); ?>
+              <?php endif; ?>
+            </div>
+            
+          <?php else: ?>
+            <div class="text-center py-5">
+              <i class="fa-solid fa-folder-open fa-4x mb-3" style="color: var(--text-muted); opacity: 0.5;"></i>
+              <h5 class="text-muted fw-bold">No submissions yet</h5>
+              <p class="text-muted mb-0">Submit your project proposal to get started.</p>
+            </div>
+          <?php endif; ?>
+        </div>
       </div>
     </div>
+    <?php endif; ?>
   </div>
   </section>
 
   <footer>
   <div class="container">
   	<div class="row">
-  		<div class="span6 offset3">
+  		<div class="col-md-6 offset-md-3">
   			<p class="copyright">
   				&copy; <?php echo date('Y'); ?>. All rights reserved.
   			</p>
@@ -306,7 +338,7 @@ $q0->close();
   <script src="../js/jquery.js"></script>
   <script src="../js/jquery.localscroll-1.2.7-min.js"></script>
   <!-- bootstrap -->
-  <script src="../js/bootstrap.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- custom functions -->
   <script src="../js/custom.js"></script>
   </body>

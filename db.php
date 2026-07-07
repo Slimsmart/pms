@@ -1,8 +1,8 @@
 <?php
 // DB credentials.
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$username = 'admin_user';
+$password = 'Babachine@11@11';
 $database = 'pms';
 
 // Establish database connection.
