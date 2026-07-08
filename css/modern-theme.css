@@ -120,6 +120,16 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
 }
 
+/* Fix Bootstrap form-floating alignment when using above custom styles */
+.form-floating > .form-control,
+.form-floating > input[type="text"],
+.form-floating > input[type="password"],
+.form-floating > input[type="tel"] {
+    height: calc(3.5rem + 2px) !important;
+    padding: 1.625rem 0.75rem 0.625rem !important;
+}
+
+
 /* Custom links */
 a {
     transition: all 0.2s;

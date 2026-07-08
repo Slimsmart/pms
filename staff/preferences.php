@@ -71,7 +71,7 @@ $q_std = $db->query("
            (SELECT sp.preference_rank FROM student_preferences sp WHERE sp.student_username = u.username AND sp.staff_username = '$staff_id') as student_rank
     FROM users u
     LEFT JOIN projects p ON u.username = p.username
-    WHERE u.staff = 0
+    WHERE u.staff = '0'
     ORDER BY u.name ASC
 ");
 while ($row = $q_std->fetch_assoc()) {

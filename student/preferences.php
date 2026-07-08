@@ -64,7 +64,7 @@ if (isset($_POST['submit_prefs'])) {
 
 // Fetch all staff/supervisors
 $supervisors = [];
-$q_sup = $db->query("select username, name from users where staff = 1 order by name asc");
+$q_sup = $db->query("select username, name from users where staff = '1' order by name asc");
 while ($row = $q_sup->fetch_assoc()) {
     $supervisors[] = $row;
 }

@@ -27,7 +27,7 @@ if (isset($_POST['allocate-form'])) {
 // 2. Update Capacities
 if (isset($_POST['update-capacities'])) {
     $capacities = isset($_POST['capacities']) ? $_POST['capacities'] : [];
-    $q = $db->prepare("update users set capacity = ? where username = ? and staff = 1");
+    $q = $db->prepare("update users set capacity = ? where username = ? and staff = '1'");
     foreach ($capacities as $username => $capacity) {
         $cap_val = intval($capacity);
         $q->bind_param('is', $cap_val, $username);
@@ -46,7 +46,7 @@ if (isset($_POST['run-gale-shapley'])) {
 
     // Fetch all students (usernames)
     $students = [];
-    $q_std = $db->query("select username from users where staff = 0");
+    $q_std = $db->query("select username from users where staff = '0'");
     while ($row = $q_std->fetch_assoc()) {
         $students[] = $row['username'];
     }
@@ -54,7 +54,7 @@ if (isset($_POST['run-gale-shapley'])) {
 
     // Fetch all staff and their capacities
     $capacities = [];
-    $q_stf = $db->query("select username, capacity from users where staff = 1");
+    $q_stf = $db->query("select username, capacity from users where staff = '1'");
     while ($row = $q_stf->fetch_assoc()) {
         $capacities[$row['username']] = intval($row['capacity']);
     }
